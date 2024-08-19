@@ -115,8 +115,7 @@ def classify_compound(df):
     
         classes = []
         for smiles in df.canonical_smiles:
-            print(smiles)
-            response = requests.get(f'https://structure.gnps2.org/classyfire?smiles={smiles}', timeout=50)
+            response = requests.get(f'https://npclassifier.gnps2.org/classify?smiles={smiles}', timeout=50)
             
             if response.status_code != 200:
                 st.error(f'Falha no API request - Status: {response.status_code}')
@@ -124,7 +123,7 @@ def classify_compound(df):
             
             data_json = response.json()
             
-            class_name = data_json['class']['name']
+            class_name = data_json['class_results']
             
             classes.append(class_name)
 

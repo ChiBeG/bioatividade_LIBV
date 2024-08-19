@@ -68,6 +68,7 @@ with container1:
 
 if not targets.empty:
     selected_index = st.text_input("Índice do alvo selecionado")
+    
 
     if selected_index:
         with st.spinner("Selecionando base de dados de moléculas: "):
@@ -87,12 +88,16 @@ if not targets.empty:
                 st.write(molecules_processed)
                 st.write(molecules_processed.shape)
 
-                # df_classified = classify_compound(molecules_processed)
-                # st.header("Moléculas classificadas")
-                # df_classified
-
 
         if not molecules_processed.empty:
+
+            classify = st.checkbox("Classificar moléculas")
+
+            if (classify):
+                with st.spinner("Classificando moléculas: "):
+                    molecules_processed = classify_compound(molecules_processed)
+                    st.header("Moléculas classificadas")
+                    st.write(molecules_processed)
 
             if st.button("Realizar análise gráfica", key="btn_analise_grafica"):
                 st.header("Análise Gráfica")
@@ -100,6 +105,9 @@ if not targets.empty:
                 st.header("Teste de Mann-Whitney")
                 df_mannwhitney = mannwhitney(molecules_processed)
                 st.write(df_mannwhitney)
+
+            if st.button("Realizar análise gráfica por classe", key="btn_analise_grafica_classe", disabled= not classify):
+                pass
 
             if st.button("Realizar avaliação ADMET", key="btn_avaliacao_admet"):
                 st.header("Avaliação ADMET")             
@@ -187,7 +195,7 @@ if not targets.empty:
                     model_generation(
                         molecules_processed, variance_input, estimators_input, model_name
                     )
-            if st.button("Gerar modelos separados por classe"):
+            if st.button("Gerar modelos separados por classe", disabled= not classify):
                 pass
 
 

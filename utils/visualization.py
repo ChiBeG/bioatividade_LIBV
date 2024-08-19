@@ -36,9 +36,14 @@ def molecules_graph_analysis(molecules_processed):
         sns.set(style='ticks')
         
         plt.figure(figsize=(5.5, 5.5))
-        sns.countplot(x='class', data=molecules_processed, edgecolor='black')
+        ax = sns.countplot(x='class', data=molecules_processed, edgecolor='black')
         plt.xlabel('Classe de Bioatividade', fontsize=14, fontweight='bold')
         plt.ylabel('Frequência', fontsize=14, fontweight='bold')
+
+        for p in ax.patches:
+                ax.annotate(f'{int(p.get_height())}', (p.get_x() + p.get_width() / 2., p.get_height() + 0.5), 
+                ha='center', va='baseline', fontsize=12, color='black', fontweight='bold')
+
         
         with graph1:
             st.write("Frequências")
@@ -152,8 +157,9 @@ def mannwhitney(df, verbose=False):
                 interpretation = 'Distribuição diferente (rejeita H0)'
 
             new_row = [descriptor, stat, p, alpha, interpretation]
-
-            resultado = pd.concat([resultado, pd.DataFrame([new_row], columns= columns_names)], ignore_index=True)
+            new_row_df = pd.DataFrame([new_row], columns=columns_names)
+            new_row_df = new_row_df.dropna()
+            resultado = pd.concat([resultado, new_row_df], ignore_index=True)
 
         return resultado
     
